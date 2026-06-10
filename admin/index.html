@@ -4,13 +4,66 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Decap CMS - Admin</title>
+    <link rel="stylesheet" href="https://unpkg.com/decap-cms@^3.11.0/dist/decap-cms.css" />
+    <style>
+      body { font-family: Inter, system-ui, -apple-system, Arial; margin:0 }
+      .admin-wrapper { display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column }
+      .admin-status { max-width:800px;padding:20px;text-align:center;color:#333 }
+      .admin-error { color:#b00020;white-space:pre-wrap;text-align:left;margin-top:12px }
+    </style>
   </head>
   <body>
-    <!-- Decap (Netlify) CMS admin -->
-    <script src="https://unpkg.com/decap-cms@^2.0.0/dist/decap-cms.js"></script>
+    <div class="admin-wrapper">
+      <div class="admin-status">
+        <h2>Loading content editor...</h2>
+        <p>If the admin UI stays blank, any load or configuration errors will appear below.</p>
+        <div id="admin-log" class="admin-error" aria-live="polite"></div>
+      </div>
+    </div>
+
     <script>
-      // Configuration loaded from admin/config.yml in the repo
-      // The Decap script auto-initializes when it can find config.yml
+      // Helper to append status/error messages to the page for debugging
+      function logAdmin(msg) {
+        const el = document.getElementById('admin-log');
+        if (!el) return;
+        el.textContent += msg + '\n';
+      }
+
+      // Load Decap CMS script dynamically so we can catch load errors
+      (function loadDecap() {
+        const url = 'https://unpkg.com/decap-cms@^3.11.0/dist/decap-cms.js';
+        const s = document.createElement('script');
+        s.src = url;
+        s.async = true;
+        s.onload = () => {
+          logAdmin('Decap script loaded.');
+          // Do NOT call CMS.init() here; Decap auto-initializes on script load.
+          // Calling init manually can double-initialize and cause DOM errors.
+          if (window.CMS) {
+            logAdmin('CMS object present; letting it auto-initialize.');
+          } else {
+            logAdmin('CMS object not found after script load.');
+          }
+        };
+        s.onerror = (e) => {
+          logAdmin('Failed to load Decap script: ' + url);
+        };
+        document.head.appendChild(s);
+      })();
+
+      // Also fetch the config file and surface 404/parse errors for clarity
+      fetch('/admin/config.yml', { cache: 'no-store' }).then(async res => {
+        if (!res.ok) {
+          logAdmin('Could not fetch /admin/config.yml — status: ' + res.status);
+          return;
+        }
+        const text = await res.text();
+        if (!text || text.trim().length === 0) {
+          logAdmin('/admin/config.yml is empty.');
+        } else {
+          logAdmin('/admin/config.yml loaded (' + Math.min(text.length, 200) + ' chars).');
+        }
+      }).catch(err => logAdmin('Error fetching /admin/config.yml: ' + err.message));
     </script>
   </body>
 </html>

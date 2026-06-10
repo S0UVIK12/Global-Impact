@@ -47,24 +47,7 @@ mobileMenuBtn.addEventListener('click', () => {
 });
 
 // ===== GALLERY FILTER =====
-const galleryItems = document.querySelectorAll('.gallery-item');
-const filterBtns = document.querySelectorAll('.filter-btn');
-
-filterBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    filterBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const filter = btn.dataset.filter;
-
-    galleryItems.forEach(item => {
-      if (filter === 'all' || item.dataset.category === filter) {
-        item.style.display = 'block';
-      } else {
-        item.style.display = 'none';
-      }
-    });
-  });
-});
+// Filters are wired by `setupGalleryFilters()` which is called after gallery renders.
 
 // ===== LIGHTBOX =====
 const lightboxOverlay = document.getElementById('lightbox-overlay');
@@ -170,6 +153,9 @@ function setupAnimations() {
 // Initialize
 showPage('home');
 setupAnimations();
+// Wire filters for any static content present before dynamic load
+if (typeof setupGalleryFilters === 'function') setupGalleryFilters();
+if (typeof setupNoticeFiltersAndSearch === 'function') setupNoticeFiltersAndSearch();
 
 // ------------------------------
 // Decap CMS - client data loader
