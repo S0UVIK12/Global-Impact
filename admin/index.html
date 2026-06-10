@@ -91,19 +91,7 @@
         document.head.appendChild(s);
       })();
 
-      // Also fetch the config file and surface 404/parse errors for clarity
-      fetch('/admin/config.yml', { cache: 'no-store' }).then(async res => {
-        if (!res.ok) {
-          logAdmin('Could not fetch /admin/config.yml — status: ' + res.status);
-          return;
-        }
-        const text = await res.text();
-        if (!text || text.trim().length === 0) {
-          logAdmin('/admin/config.yml is empty.');
-        } else {
-          logAdmin('/admin/config.yml loaded (' + Math.min(text.length, 200) + ' chars).');
-        }
-      }).catch(err => logAdmin('Error fetching /admin/config.yml: ' + err.message));
+        // Removed a redundant root-relative fetch to avoid noisy 404 messages
     </script>
   </body>
 </html>
