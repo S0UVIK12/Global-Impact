@@ -9,12 +9,11 @@ public_folder: "/uploads"
 publish_mode: editorial_workflow
 
 collections:
-  - name: "gallery"
+  - name: "gallery_json"
     label: "Gallery"
     files:
       - file: "data/gallery.json"
         label: "Gallery JSON"
-        name: "gallery_json"
         fields:
           - { label: "Items", name: "items", widget: list, required: false, fields: [
               { label: "Title", name: "title", widget: string },
@@ -24,12 +23,11 @@ collections:
               { label: "Date", name: "date", widget: datetime }
             ] }
 
-  - name: "members"
+  - name: "members_json"
     label: "Members"
     files:
       - file: "data/members.json"
         label: "Members JSON"
-        name: "members_json"
         fields:
           - { label: "Items", name: "items", widget: list, required: false, fields: [
               { label: "Name", name: "name", widget: string },
@@ -39,12 +37,11 @@ collections:
               { label: "Type", name: "type", widget: string, hint: "leadership or regional" }
             ] }
 
-  - name: "notifications"
+  - name: "notifications_json"
     label: "Notifications"
     files:
       - file: "data/notifications.json"
         label: "Notifications JSON"
-        name: "notifications_json"
         fields:
           - { label: "Items", name: "items", widget: list, required: false, fields: [
               { label: "Title", name: "title", widget: string },
