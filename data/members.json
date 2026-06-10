@@ -1,0 +1,11 @@
+{
+  "items": [
+    {
+      "name": "Dr. Samuel Okafor",
+      "role": "Executive Director",
+      "photo": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&q=80",
+      "bio": "Leading global operations with 20+ years of humanitarian experience.",
+      "type": "leadership"
+    }
+  ]
+}

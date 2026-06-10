@@ -1,0 +1,56 @@
+backend:
+  name: github
+  repo: "YOUR_GITHUB_USER/YOUR_REPO" # replace with your repo
+  branch: main
+
+media_folder: "static/uploads"
+public_folder: "/uploads"
+
+publish_mode: editorial_workflow
+
+collections:
+  - name: "gallery"
+    label: "Gallery"
+    files:
+      - file: "data/gallery.json"
+        label: "Gallery JSON"
+        name: "gallery_json"
+        fields:
+          - { label: "Items", name: "items", widget: list, required: false, fields: [
+              { label: "Title", name: "title", widget: string },
+              { label: "Image URL", name: "image", widget: string },
+              { label: "Category", name: "category", widget: string },
+              { label: "Caption", name: "caption", widget: text },
+              { label: "Date", name: "date", widget: datetime }
+            ] }
+
+  - name: "members"
+    label: "Members"
+    files:
+      - file: "data/members.json"
+        label: "Members JSON"
+        name: "members_json"
+        fields:
+          - { label: "Items", name: "items", widget: list, required: false, fields: [
+              { label: "Name", name: "name", widget: string },
+              { label: "Role", name: "role", widget: string },
+              { label: "Photo URL", name: "photo", widget: string },
+              { label: "Bio", name: "bio", widget: text },
+              { label: "Type", name: "type", widget: string, hint: "leadership or regional" }
+            ] }
+
+  - name: "notifications"
+    label: "Notifications"
+    files:
+      - file: "data/notifications.json"
+        label: "Notifications JSON"
+        name: "notifications_json"
+        fields:
+          - { label: "Items", name: "items", widget: list, required: false, fields: [
+              { label: "Title", name: "title", widget: string },
+              { label: "Type", name: "type", widget: string, hint: "announcement, event, urgent" },
+              { label: "Date", name: "date", widget: datetime },
+              { label: "Body", name: "body", widget: text },
+              { label: "CTA Label", name: "cta", widget: string },
+              { label: "URL", name: "url", widget: string }
+            ] }
