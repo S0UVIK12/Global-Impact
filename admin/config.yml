@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: "YOUR_GITHUB_USER/YOUR_REPO" # replace with your repo
+  repo: "S0UVIK12/Global-Impact" # replace with your repo
   branch: main
 
 media_folder: "static/uploads"
