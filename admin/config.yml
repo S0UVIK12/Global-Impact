@@ -12,7 +12,8 @@ collections:
   - name: "gallery_json"
     label: "Gallery"
     files:
-      - file: "data/gallery.json"
+      - name: "gallery_file"
+        file: "data/gallery.json"
         label: "Gallery JSON"
         fields:
           - { label: "Items", name: "items", widget: list, required: false, fields: [
@@ -26,7 +27,8 @@ collections:
   - name: "members_json"
     label: "Members"
     files:
-      - file: "data/members.json"
+      - name: "members_file"
+        file: "data/members.json"
         label: "Members JSON"
         fields:
           - { label: "Items", name: "items", widget: list, required: false, fields: [
@@ -40,7 +42,8 @@ collections:
   - name: "notifications_json"
     label: "Notifications"
     files:
-      - file: "data/notifications.json"
+      - name: "notifications_file"
+        file: "data/notifications.json"
         label: "Notifications JSON"
         fields:
           - { label: "Items", name: "items", widget: list, required: false, fields: [
