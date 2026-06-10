@@ -21,6 +21,10 @@
       </div>
     </div>
 
+    <!-- Prevent auto-init; we'll initialize after loading the correct config -->
+    <script>window.CMS_MANUAL_INIT = true;</script>
+    <!-- YAML parser for converting config.yml to JSON object -->
+    <script src="https://unpkg.com/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
     <script>
       // Helper to append status/error messages to the page for debugging
       function logAdmin(msg) {
@@ -37,13 +41,49 @@
         s.async = true;
         s.onload = () => {
           logAdmin('Decap script loaded.');
-          // Do NOT call CMS.init() here; Decap auto-initializes on script load.
-          // Calling init manually can double-initialize and cause DOM errors.
-          if (window.CMS) {
-            logAdmin('CMS object present; letting it auto-initialize.');
-          } else {
+          if (!window.CMS) {
             logAdmin('CMS object not found after script load.');
+            return;
           }
+
+          // Try several candidate locations for config.yml until one succeeds.
+          const candidates = [
+            '/admin/config.yml',
+            // path relative to current pathname (useful for project pages like /<repo>/admin/)
+            (location.pathname.replace(/\/$/, '') + '/config.yml'),
+            // repo-rooted admin
+            (location.pathname.replace(/\/admin\/?$/, '') + '/admin/config.yml')
+          ];
+
+          (async function findAndInit() {
+            for (const p of candidates) {
+              try {
+                logAdmin('Trying config: ' + p);
+                const res = await fetch(p, {cache: 'no-store'});
+                if (!res.ok) { logAdmin('No config at ' + p + ' (' + res.status + ')'); continue; }
+                const text = await res.text();
+                // parse YAML to JS object
+                let cfg = null;
+                try { cfg = window.jsyaml ? window.jsyaml.load(text) : null; } catch (pe) { logAdmin('YAML parse error: ' + pe.message); }
+                if (!cfg) {
+                  logAdmin('Parsed config is empty or YAML parser missing.');
+                  continue;
+                }
+                logAdmin('Loaded config from ' + p);
+                try {
+                  // Initialize CMS with the parsed config object
+                  window.CMS.init({ config: cfg });
+                  logAdmin('CMS.init(config) called successfully.');
+                } catch (initErr) {
+                  logAdmin('CMS.init threw: ' + initErr.message);
+                }
+                return;
+              } catch (err) {
+                logAdmin('Error fetching ' + p + ': ' + err.message);
+              }
+            }
+            logAdmin('Could not find a usable admin/config.yml; check file paths.');
+          })();
         };
         s.onerror = (e) => {
           logAdmin('Failed to load Decap script: ' + url);
